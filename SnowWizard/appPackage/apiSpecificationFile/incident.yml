@@ -1,0 +1,54 @@
+openapi: 3.0.0
+info:
+  title: Incident Service
+  description: A simple service to manage ServiceNow incidents
+  version: 1.0.0
+servers:
+  - url: ${{OPENAPI_SERVER_URL}}/api
+    description: The incidents api server
+paths:
+  /incidents/:
+    get:
+      operationId: listIncidents
+      summary: List incidents from ServiceNow
+      description: Returns a list of incidents from ServiceNow with their details and images
+      parameters:
+        - name: assignedTo
+          in: query
+          description: Filter incidents by who they're assigned to
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: A list of incidents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The unique identifier of the incident
+                        title:
+                          type: string
+                          description: The short summary of the incident
+                        description:
+                          type: string
+                          description: The detailed description of the incident
+                        assignedTo:
+                          type: string
+                          description: The user who is responsible for the incident
+                        date:
+                          type: string
+                          format: date-time
+                          description: The date and time when the incident is scheduled or completed
+                        image:
+                          type: string
+                          format: uri
+                          description: The URL of the image of the incident 

@@ -1,0 +1,90 @@
+{
+  "schema_version": "v2.1",
+  "name_for_human": "SnowWizard",
+  "namespace": "SnowWizard",
+  "description_for_human": "API to list and update ServiceNow incidents",
+  "description_for_model": "Plugin for listing and updating ServiceNow incidents, you can search by who the incident was assigned to.",
+  "functions": [
+    {
+      "name": "listIncidents",
+      "description": "Returns a detailed list of incidents from ServiceNow with their details and images. May be filtered by who the incident was assigned to.",
+      "capabilities": {
+        "response_semantics": {
+          "data_path": "$.results",
+          "properties": {
+            "title": "$.title",
+            "subtitle": "$.description",
+            "url": "$.image"
+          },
+          "static_template": {
+            "type": "AdaptiveCard",
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "version": "1.5",
+            "body": [
+              {
+                "type": "Container",
+                "$data": "${$root}",
+                "items": [
+                  {
+                    "type": "TextBlock",
+                    "text": "id: ${if(id, id, 'N/A')}",
+                    "wrap": true
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "title: ${if(title, title, 'N/A')}",
+                    "wrap": true
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "description: ${if(description, description, 'N/A')}",
+                    "wrap": true
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "assignedTo: ${if(assignedTo, assignedTo, 'N/A')}",
+                    "wrap": true
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "date: ${if(date, date, 'N/A')}",
+                    "wrap": true
+                  },
+                  {
+                    "type": "Image",
+                    "url": "${image}",
+                    "$when": "${image != null}"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      } 
+    }    
+  ],
+  "runtimes": [
+    {
+      "type": "OpenApi",
+      "auth": {
+        "type": "None"
+      },
+      "spec": {
+        "url": "apiSpecificationFile/incident.yml",
+        "progress_style": "ShowUsageWithInputAndOutput"
+      },
+      "run_for_functions": ["listIncidents"]
+    }
+  ],
+  "capabilities": {
+    "localization": {},
+    "conversation_starters": [
+      {
+        "text": "List all ServiceNow incidents"
+      },
+      {
+        "text": "List ServiceNow incidents assigned to me"
+      }
+    ]
+  }
+}

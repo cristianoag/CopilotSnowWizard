@@ -1,0 +1,7 @@
+@base_url = http://localhost:7071/api
+
+### Get all incidents
+{{base_url}}/incidents
+
+### Get all incidents assigned to Karin Blair
+{{base_url}}/incidents/?assignedTo=Karin Blair
