@@ -28,6 +28,7 @@ class IncidentsApiService {
         {
             params: {
             sysparm_limit: 10,
+            sysparm_fields: 'number,made_sla,short_description,description,priority,opened_at',
             sysparm_query: 'ORDERBYDESCsys_created_on'
             },
             auth: {

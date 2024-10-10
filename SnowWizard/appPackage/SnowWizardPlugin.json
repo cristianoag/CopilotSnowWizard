@@ -32,28 +32,18 @@
                   },
                   {
                     "type": "TextBlock",
-                    "text": "title: ${if(title, title, 'N/A')}",
+                    "text": "Short Description: ${if(short_description, short_description, 'N/A')}",
                     "wrap": true
                   },
                   {
                     "type": "TextBlock",
-                    "text": "description: ${if(description, description, 'N/A')}",
+                    "text": "Priority: ${if(priority, priority, 'N/A')}",
                     "wrap": true
                   },
                   {
                     "type": "TextBlock",
-                    "text": "assignedTo: ${if(assignedTo, assignedTo, 'N/A')}",
+                    "text": "Opened: ${if(sys_created_on, sys_created_on, 'N/A')}",
                     "wrap": true
-                  },
-                  {
-                    "type": "TextBlock",
-                    "text": "Opened: ${if(opened, opened, 'N/A')}",
-                    "wrap": true
-                  },
-                  {
-                    "type": "Image",
-                    "url": "${image}",
-                    "$when": "${image != null}"
                   }
                 ]
               }
