@@ -1,11 +1,11 @@
 openapi: 3.0.0
 info:
-  title: Incident Service
-  description: A simple service to manage ServiceNow incidents
+  title: ServiceNow Data Service
+  description: A simple service to manage ServiceNow data, including incidents.
   version: 1.0.0
 servers:
   - url: ${{OPENAPI_SERVER_URL}}/api
-    description: The incidents api server
+    description: The ServiceNow data service api server
 paths:
   /incidents/:
     get:
@@ -13,15 +13,15 @@ paths:
       summary: List incidents from ServiceNow
       description: Returns a list of incidents from ServiceNow with their details and images
       parameters:
-        - name: assignedTo
+        - name: opened_by
           in: query
-          description: Filter incidents by who they're assigned to
+          description: Filter incidents by who opened them
           schema:
             type: string
           required: false
       responses:
         '200':
-          description: A list of incidents
+          description: A list of incidents returned by ServiceNow
           content:
             application/json:
               schema:
@@ -32,23 +32,343 @@ paths:
                     items:
                       type: object
                       properties:
-                        id:
+                        parent:
                           type: string
-                          description: The unique identifier of the incident
-                        title:
+                          description: ID of the parent incident, if applicable.
+                        made_sla:
                           type: string
-                          description: The short summary of the incident
-                        description:
+                          enum: ["true", "false"]
+                          description: Indicates if the incident met the Service Level Agreement (SLA).
+                        caused_by:
                           type: string
-                          description: The detailed description of the incident
-                        assignedTo:
+                          description: Reference to the change request that caused the incident.
+                        watch_list:
                           type: string
-                          description: The user who is responsible for the incident
-                        date:
+                          description: List of users who are watching this incident.
+                        upon_reject:
+                          type: string
+                          description: Action to take upon rejection of the request.
+                        sys_updated_on:
                           type: string
                           format: date-time
-                          description: The date and time when the incident is scheduled or completed
-                        image:
+                          description: Timestamp of the last update to the incident.
+                        child_incidents:
                           type: string
-                          format: uri
-                          description: The URL of the image of the incident 
+                          description: List of child incidents related to this incident.
+                        hold_reason:
+                          type: string
+                          description: Reason why the incident is on hold.
+                        origin_table:
+                          type: string
+                          description: The table from which the incident originated.
+                        task_effective_number:
+                          type: string
+                          description: The effective number of the task.
+                        approval_history:
+                          type: string
+                          description: History of approvals for the incident.
+                        number:
+                          type: string
+                          description: Unique identifier for the incident.
+                        resolved_by:
+                          type: string
+                          description: User who resolved the incident.
+                        sys_updated_by:
+                          type: string
+                          description: User who last updated the incident.
+                        opened_by:
+                          type: object
+                          properties:
+                            link:
+                              type: string
+                              format: uri
+                              description: Link to the user who opened the incident.
+                            value:
+                              type: string
+                              description: Sys_id of the user who opened the incident.
+                        user_input:
+                          type: string
+                          description: Additional input from the user.
+                        sys_created_on:
+                          type: string
+                          format: date-time
+                          description: Timestamp of when the incident was created.
+                        sys_domain:
+                          type: object
+                          properties:
+                            link:
+                              type: string
+                              format: uri
+                              description: Link to the domain.
+                            value:
+                              type: string
+                              description: Sys_id of the domain.
+                        state:
+                          type: string
+                          description: Current state of the incident.
+                        route_reason:
+                          type: string
+                          description: Reason for routing the incident.
+                        sys_created_by:
+                          type: string
+                          description: User who created the incident.
+                        knowledge:
+                          type: string
+                          enum: ["true", "false"]
+                          description: Indicates if the incident has a knowledge article.
+                        order:
+                          type: string
+                          description: Order in which the incident should be handled.
+                        calendar_stc:
+                          type: string
+                          description: Calendar time duration in seconds.
+                        closed_at:
+                          type: string
+                          description: Timestamp of when the incident was closed.
+                        cmdb_ci:
+                          type: object
+                          properties:
+                            link:
+                              type: string
+                              format: uri
+                              description: Link to the Configuration Item (CI).
+                            value:
+                              type: string
+                              description: Sys_id of the Configuration Item (CI).
+                        delivery_plan:
+                          type: string
+                          description: Delivery plan associated with the incident.
+                        contract:
+                          type: string
+                          description: Contract related to the incident.
+                        impact:
+                          type: string
+                          description: Level of impact the incident has on the business.
+                        active:
+                          type: string
+                          enum: ["true", "false"]
+                          description: Indicates if the incident is active.
+                        work_notes_list:
+                          type: string
+                          description: List of work notes related to the incident.
+                        business_service:
+                          type: string
+                          description: Business service affected by the incident.
+                        business_impact:
+                          type: string
+                          description: Impact of the incident on business operations.
+                        priority:
+                          type: string
+                          description: Priority of the incident.
+                        sys_domain_path:
+                          type: string
+                          description: Path of the domain.
+                        rfc:
+                          type: string
+                          description: Request for Change (RFC) associated with the incident.
+                        time_worked:
+                          type: string
+                          description: Total time worked on the incident.
+                        expected_start:
+                          type: string
+                          description: Expected start time for resolving the incident.
+                        opened_at:
+                          type: string
+                          format: date-time
+                          description: Timestamp of when the incident was opened.
+                        business_duration:
+                          type: string
+                          description: Business time duration in seconds.
+                        group_list:
+                          type: string
+                          description: List of groups associated with the incident.
+                        work_end:
+                          type: string
+                          description: Work end time for the incident.
+                        caller_id:
+                          type: object
+                          properties:
+                            link:
+                              type: string
+                              format: uri
+                              description: Link to the caller.
+                            value:
+                              type: string
+                              description: Sys_id of the caller.
+                        reopened_time:
+                          type: string
+                          description: Timestamp of when the incident was reopened.
+                        resolved_at:
+                          type: string
+                          description: Timestamp of when the incident was resolved.
+                        approval_set:
+                          type: string
+                          description: Approval set for the incident.
+                        subcategory:
+                          type: string
+                          description: Subcategory of the incident.
+                        work_notes:
+                          type: string
+                          description: Work notes associated with the incident.
+                        universal_request:
+                          type: string
+                          description: Universal request related to the incident.
+                        short_description:
+                          type: string
+                          description: Short description of the incident.
+                        close_code:
+                          type: string
+                          description: Code indicating how the incident was closed.
+                        correlation_display:
+                          type: string
+                          description: Correlation display value for the incident.
+                        delivery_task:
+                          type: string
+                          description: Delivery task associated with the incident.
+                        work_start:
+                          type: string
+                          description: Work start time for the incident.
+                        assignment_group:
+                          type: object
+                          properties:
+                            link:
+                              type: string
+                              format: uri
+                              description: Link to the assignment group.
+                            value:
+                              type: string
+                              description: Sys_id of the assignment group.
+                        additional_assignee_list:
+                          type: string
+                          description: List of additional assignees for the incident.
+                        business_stc:
+                          type: string
+                          description: Business time duration in seconds for the service target.
+                        cause:
+                          type: string
+                          description: Cause of the incident.
+                        description:
+                          type: string
+                          description: Detailed description of the incident.
+                        origin_id:
+                          type: string
+                          description: ID of the originating incident.
+                        calendar_duration:
+                          type: string
+                          description: Total calendar time duration.
+                        close_notes:
+                          type: string
+                          description: Notes related to the closure of the incident.
+                        notify:
+                          type: string
+                          description: Notification type for the incident.
+                        service_offering:
+                          type: string
+                          description: Service offering impacted by the incident.
+                        sys_class_name:
+                          type: string
+                          description: The name of the table used to store the incident.
+                        closed_by:
+                          type: string
+                          description: User who closed the incident.
+                        follow_up:
+                          type: string
+                          description: Follow-up time for the incident.
+                        parent_incident:
+                          type: string
+                          description: Parent incident of the current incident.
+                        sys_id:
+                          type: string
+                          description: Unique identifier for the incident record.
+                        contact_type:
+                          type: string
+                          description: Method of contact for reporting the incident.
+                        reopened_by:
+                          type: string
+                          description: User who reopened the incident.
+                        incident_state:
+                          type: string
+                          description: State of the incident.
+                        urgency:
+                          type: string
+                          description: Level of urgency of the incident.
+                        problem_id:
+                          type: object
+                          properties:
+                            link:
+                              type: string
+                              format: uri
+                              description: Link to the problem associated with the incident.
+                            value:
+                              type: string
+                              description: Sys_id of the problem.
+                        company:
+                          type: object
+                          properties:
+                            link:
+                              type: string
+                              format: uri
+                              description: Link to the company associated with the incident.
+                            value:
+                              type: string
+                              description: Sys_id of the company.
+                        reassignment_count:
+                          type: string
+                          description: Number of times the incident has been reassigned.
+                        activity_due:
+                          type: string
+                          format: date-time
+                          description: Due date for the next activity related to the incident.
+                        assigned_to:
+                          type: object
+                          properties:
+                            link:
+                              type: string
+                              format: uri
+                              description: Link to the assigned user.
+                            value:
+                              type: string
+                              description: Sys_id of the assigned user.
+                        severity:
+                          type: string
+                          description: Severity level of the incident.
+                        comments:
+                          type: string
+                          description: Comments on the incident.
+                        approval:
+                          type: string
+                          description: Approval status of the incident.
+                        sla_due:
+                          type: string
+                          format: date-time
+                          description: SLA due date for the incident.
+                        comments_and_work_notes:
+                          type: string
+                          description: Comments and work notes associated with the incident.
+                        due_date:
+                          type: string
+                          description: Due date for the incident.
+                        sys_mod_count:
+                          type: string
+                          description: Number of times the incident has been modified.
+                        reopen_count:
+                          type: string
+                          description: Number of times the incident has been reopened.
+                        sys_tags:
+                          type: string
+                          description: Tags associated with the incident.
+                        escalation:
+                          type: string
+                          description: Escalation level of the incident.
+                        upon_approval:
+                          type: string
+                          description: Action to take upon approval of the request.
+                        correlation_id:
+                          type: string
+                          description: Correlation ID for the incident.
+                        location:
+                          type: string
+                          description: Location associated with the incident.
+                        category:
+                          type: string
+                          description: Category of the incident.

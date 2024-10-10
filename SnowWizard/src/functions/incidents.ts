@@ -1,6 +1,6 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-
+import IncidentsApiService from "../services/snow_incidents";
 import incidentRecords from "../incidents_data.json";
 
 /**
@@ -14,38 +14,35 @@ export async function incidents(
   req: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  context.log("HTTP trigger function processed a request.");
-
+  
   // Initialize response.
   const res: HttpResponseInit = {
     status: 200,
     jsonBody: {
-      results: incidentRecords,
+      results: [],
     },
   };
 
-  // Get the assignedTo query parameter.
-  const assignedTo = req.query.get("assignedTo");
+  try {
+      // Get input parameters.
+      //const assignedTo = req.query.get("assignedTo");
 
-  // If the assignedTo query parameter is not provided, return the response.
-  if (!assignedTo) {
-    console.log(`   ✅ GET /api/incidents: ${incidentRecords.length} incidents returned`);
+      console.log(`➡️ GET /api/incidents: `);
+
+      // Fetch the latest incidents from the ServiceNow API.
+      const incidents = await IncidentsApiService.getIncidents();
+      res.jsonBody.results = incidents ?? [];
+      console.log(`   ✅ GET /api/incidents: response status ${res.status}; ${incidents.length} incidents returned`);
+      return res;
+
+  }
+  catch (error) {
+    console.error(`   ❌ GET /api/incidents: ${error}`);
+    res.status = 500;
+    res.jsonBody = { error: error.message };
     return res;
   }
 
-  // Filter the incident information by the assignedTo query parameter.
-  const incidents = incidentRecords.filter((item) => {
-    const fullName = item.assignedTo.toLowerCase();
-    const query = assignedTo.trim().toLowerCase();
-    const [firstName, lastName] = fullName.split(" ");
-    return fullName === query || firstName === query || lastName === query;
-  });
-
-  // Return filtered incident records, or an empty array if no records were found.
-  res.jsonBody.results = incidents ?? [];
-  console.log(`   ✅ GET /api/incidents/assignedTo: ${incidents.length} returned`);
-
-  return res;
 }
 
 app.http("incidents", {

@@ -27,7 +27,7 @@
                 "items": [
                   {
                     "type": "TextBlock",
-                    "text": "id: ${if(id, id, 'N/A')}",
+                    "text": "Number: ${if(number, number, 'N/A')}",
                     "wrap": true
                   },
                   {
@@ -47,7 +47,7 @@
                   },
                   {
                     "type": "TextBlock",
-                    "text": "date: ${if(date, date, 'N/A')}",
+                    "text": "Opened: ${if(opened, opened, 'N/A')}",
                     "wrap": true
                   },
                   {
