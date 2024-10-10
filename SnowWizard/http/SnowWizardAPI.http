@@ -3,5 +3,14 @@
 ### Get all incidents
 {{base_url}}/incidents
 
-### Get all incidents assigned to Karin Blair
-{{base_url}}/incidents/?assignedTo=Karin Blair
+### Get all my incidents
+{{base_url}}/incidents/me
+
+### Get an user profile
+{{base_url}}/profiles/beth.anglin@example.com
+
+### Get another user profile
+{{base_url}}/profiles/fred.luddy@example.com
+
+### Get my profile
+{{base_url}}/me

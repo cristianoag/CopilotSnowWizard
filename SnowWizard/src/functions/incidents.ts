@@ -1,7 +1,6 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import IncidentsApiService from "../services/snow_incidents";
-import incidentRecords from "../incidents_data.json";
 
 /**
  * This function handles the HTTP request and returns the incidents information.
@@ -25,15 +24,24 @@ export async function incidents(
 
   try {
       // Get input parameters.
-      //const assignedTo = req.query.get("assignedTo");
+      const mineIncidents = req.params?.me?.toLowerCase();
 
-      console.log(`➡️ GET /api/incidents: `);
-
-      // Fetch the latest incidents from the ServiceNow API.
-      const incidents = await IncidentsApiService.getIncidents();
-      res.jsonBody.results = incidents ?? [];
-      console.log(`   ✅ GET /api/incidents: response status ${res.status}; ${incidents.length} incidents returned`);
-      return res;
+      if (mineIncidents === 'me') 
+      {
+        console.log(`➡️ GET /api/incidents/me: `);
+        const username = 'admin@m365cpi08742632.onmicrosoft.com';
+        const incidents = await IncidentsApiService.getUserIncidents(username);
+        res.jsonBody.results = incidents ?? [];
+        console.log(`   ✅ GET /api/incidents/me: response status ${res.status}; ${incidents.length} incidents returned`);
+        return res;
+      }
+      
+        // Fetch all incidents from the ServiceNow API.
+        console.log(`➡️ GET /api/incidents: `);
+        const incidents = await IncidentsApiService.getIncidents();
+        res.jsonBody.results = incidents ?? [];
+        console.log(`   ✅ GET /api/incidents: response status ${res.status}; ${incidents.length} incidents returned`);
+        return res;
 
   }
   catch (error) {
@@ -48,6 +56,6 @@ export async function incidents(
 app.http("incidents", {
   methods: ["GET"],
   authLevel: "anonymous",
-  route: "incidents/{*command}",
+  route: "incidents/{*me}",
   handler: incidents,
 });
