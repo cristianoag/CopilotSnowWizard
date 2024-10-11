@@ -4,6 +4,12 @@ This project demonstrates a sample implementation of an M365 Declarative Copilot
 
 **Note:** This is sample code and should not be used in production without thorough review. It is designed to illustrate how to build a simple Declarative Copilot using Visual Studio Code and the Teams Toolkit.
 
+
+
+| ![CopilotSnowWizard Screenshot 1](images/2024-10-11_16-29.png) | ![CopilotSnowWizard Screenshot 1](images/2024-10-11_16-39.png) | ![CopilotSnowWizard Screenshot 1](images/2024-10-11_16-40.png) |
+|:-------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------:|
+
+
 ## Preparing your Development Environment
 
 In order to run the code, you will need an M365 tenant with Copilot licenses enabled. Additionally, you must enable a policy to sideload custom applications. Without this, you will not be able to run the code. These instructions assume you have admin rights on the tenant. If you do not have admin rights, please work with your administrator to allow the upload of custom applications.
