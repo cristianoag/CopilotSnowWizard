@@ -9,7 +9,17 @@
             "text": "List all ServiceNow incidents"
         },
         {
-            "text": "List ServiceNow incidents assigned to me"
+            "text": "Create a ServiceNow incident with the 'The 3rd floor printer is not working' short description"
+        }
+    ],
+    "capabilities": [
+        {
+            "name": "OneDriveAndSharePoint",
+            "items_by_url": [
+                {
+                    "url": "https://m365cpi08742632.sharepoint.com/sites/SnowWizard"
+                }
+            ]
         }
     ],
     "actions": [

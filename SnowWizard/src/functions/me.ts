@@ -23,7 +23,7 @@ export async function profiles(
     };
   
     try {
-        // Get input parameters. Need to implement authentication to get the address from context
+        // Need to implement authentication to get the address from context, for now lets use Fred Luddy as the current user
         const email = 'fred.luddy@example.com'
   
         console.log(`➡️ GET /api/me: `);

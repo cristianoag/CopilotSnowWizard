@@ -1,5 +1,6 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { HttpError } from "../services/utilities";
 import IncidentsApiService from "../services/snow_incidents";
 
 /**
@@ -24,24 +25,51 @@ export async function incidents(
 
   try {
       // Get input parameters.
-      const mineIncidents = req.params?.me?.toLowerCase();
+      const id = req.params?.id; // Incident ID
+      // Need to implement authentication to get the address from context, for now lets use Fred Luddy as the current user
+      const email = 'fred.luddy@example.com'
+      let body = null;
 
-      if (mineIncidents === 'me') 
-      {
-        console.log(`➡️ GET /api/incidents/me: `);
-        const username = 'admin@m365cpi08742632.onmicrosoft.com';
-        const incidents = await IncidentsApiService.getUserIncidents(username);
-        res.jsonBody.results = incidents ?? [];
-        console.log(`   ✅ GET /api/incidents/me: response status ${res.status}; ${incidents.length} incidents returned`);
-        return res;
+      switch (req.method) {
+        case "GET": {
+
+          if (id) {
+            // Fetch the incident from the ServiceNow API.
+            console.log(`➡️ GET /api/incidents/${id}: `);
+            const incident = await IncidentsApiService.getIncident(id);
+            res.jsonBody.results = incident ?? [];
+            console.log(`   ✅ GET /api/incidents${id}: response status ${res.status}; ${incident.length} incidents returned`);
+            return res;
+          }
+
+          // Fetch all incidents from the ServiceNow API.
+          console.log(`➡️ GET /api/incidents: `);
+          const incidents = await IncidentsApiService.getIncidents();
+          res.jsonBody.results = incidents ?? [];
+          console.log(`   ✅ GET /api/incidents: response status ${res.status}; ${incidents.length} incidents returned`);
+          return res;
+
+        }
+        case "POST": {
+          try {
+            const bd = await req.text();
+            body = JSON.parse(bd);
+          } catch (error) {
+            throw new HttpError(400, `No body to process this request.`);
+          }
+          if (body) {
+            // Create a new incident in ServiceNow.
+            console.log(`➡️ POST /api/incidents: `);
+            const incident = await IncidentsApiService.createIncident(email, body["short_description"], body["description"]);
+            res.jsonBody.results = incident ?? [];
+            console.log(`   ✅ POST /api/incidents: response status ${res.status}; ${incident.number} incident created!`);
+            return res;
+          }
+        }
+        default: {
+            throw new Error(`Method not allowed: ${req.method}`);
+        }
       }
-      
-        // Fetch all incidents from the ServiceNow API.
-        console.log(`➡️ GET /api/incidents: `);
-        const incidents = await IncidentsApiService.getIncidents();
-        res.jsonBody.results = incidents ?? [];
-        console.log(`   ✅ GET /api/incidents: response status ${res.status}; ${incidents.length} incidents returned`);
-        return res;
 
   }
   catch (error) {
@@ -54,8 +82,8 @@ export async function incidents(
 }
 
 app.http("incidents", {
-  methods: ["GET"],
+  methods: ["GET", "POST"],
   authLevel: "anonymous",
-  route: "incidents/{*me}",
+  route: "incidents/{*id}",
   handler: incidents,
 });
