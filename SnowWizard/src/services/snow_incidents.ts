@@ -55,7 +55,7 @@ class IncidentsApiService {
         `https://${this.SN_INSTANCE}.service-now.com/api/now/table/incident`,
         {
             params: {
-            sysparm_limit: 50,
+            sysparm_limit: 10,
             sysparm_fields: 'number,made_sla,short_description,description,priority,opened_at',
             sysparm_query: 'ORDERBYDESCsys_created_on'
             },
