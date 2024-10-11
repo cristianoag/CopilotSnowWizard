@@ -91,3 +91,6 @@ List all ServiceNow incidents
 Create a table with all ServiceNow open incidents 
 Create a ServiceNow incident with jokes as short and full descriptions
 Create a ServiceNow incident based on the content of the text below. <provide a text describing a problem>
+```
+
+Please note that the code is limiting the return from the ServiceNow interface in just 10 incidents. That can be easily changed by adjusting the limit on the service interface implemented by snow_incidents.ts.
